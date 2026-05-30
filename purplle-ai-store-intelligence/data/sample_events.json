@@ -1,0 +1,9 @@
+[
+  {
+    "event_id":"1",
+    "store_id":"STORE_001",
+    "visitor_id":"V001",
+    "event_type":"ENTRY",
+    "timestamp":"2026-05-30T09:00:00"
+  }
+]

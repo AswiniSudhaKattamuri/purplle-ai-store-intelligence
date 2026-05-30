@@ -119,6 +119,17 @@ GET /stores/{store_id}/anomalies
 
 ---
 
+
+## Screenshots
+
+### Dashboard
+
+![Dashboard](docs/screenshots/dashboard.png)
+
+### API Documentation
+
+![Swagger](docs/screenshots/swagger.png)
+
 ## Technology Stack
 
 * Python

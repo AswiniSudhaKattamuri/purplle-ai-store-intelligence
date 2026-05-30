@@ -1,9 +1,12 @@
 __pycache__/
 *.pyc
 
-*.pt
+data/store.db
 
-data/
-*.db
+data/Images/*.jpg
+data/Images/*.png
 
-.env
+yolov8n.pt
+
+*.mp4
+*.avi

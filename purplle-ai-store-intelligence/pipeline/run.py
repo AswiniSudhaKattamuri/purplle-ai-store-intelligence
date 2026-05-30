@@ -1,5 +1,5 @@
 from detect import detect_people
-from emit import emit_entry_event
+from emit import simulate_customer_journey
 
 detections = detect_people(
     "data/Images/test.jpg"
@@ -7,6 +7,6 @@ detections = detect_people(
 
 for i, person in enumerate(detections):
 
-    emit_entry_event(
+    simulate_customer_journey(
         f"VISITOR_{i+1}"
     )

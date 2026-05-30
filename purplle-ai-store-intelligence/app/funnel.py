@@ -14,6 +14,7 @@ def get_funnel(store_id: str):
         SELECT event_type, COUNT(*)
         FROM events
         WHERE store_id = ?
+        AND is_staff = 0
         GROUP BY event_type
         """,
         (store_id,)
@@ -28,7 +29,8 @@ def get_funnel(store_id: str):
         "entry": 0,
         "zone_visit": 0,
         "billing_queue": 0,
-        "purchase": 0
+        "purchase": 0,
+        "conversion_rate": 0
     }
 
     for event_type, count in rows:
@@ -44,5 +46,11 @@ def get_funnel(store_id: str):
 
         elif event_type == "PURCHASE":
             funnel["purchase"] = count
+
+    if funnel["entry"] > 0:
+        funnel["conversion_rate"] = round(
+            (funnel["purchase"] / funnel["entry"]) * 100,
+            2
+        )
 
     return funnel

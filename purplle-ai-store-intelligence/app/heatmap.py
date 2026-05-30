@@ -14,6 +14,7 @@ def get_heatmap(store_id: str):
     FROM events
     WHERE store_id = ?
     GROUP BY zone_id
+    ORDER BY COUNT(*) DESC
     """, (store_id,))
 
     rows = cursor.fetchall()

@@ -107,18 +107,100 @@ Cons:
 
 ---
 
-## 7. Production Improvements
+## 7. Additional Engineering Decisions
+
+### Why UUID Event IDs?
+
+UUIDs are used as event identifiers to guarantee uniqueness across all generated events.
+
+Benefits:
+
+* Prevents ID collisions
+* Supports distributed event generation
+* Improves event traceability
+
+---
+
+### Why Idempotent Ingestion?
+
+The ingestion API uses:
+
+* PRIMARY KEY(event_id)
+* INSERT OR IGNORE
+
+Benefits:
+
+* Prevents duplicate event storage
+* Safe retry behavior
+* Improves production reliability
+
+---
+
+### Why Staff Filtering?
+
+Retail analytics should focus on customer behavior rather than employee movement.
+
+Staff events are stored but excluded from:
+
+* Visitor metrics
+* Funnel calculations
+* Conversion rate calculations
+
+This provides more accurate business insights.
+
+---
+
+### Why Streamlit?
+
+Streamlit was selected because:
+
+* Rapid dashboard development
+* Easy integration with FastAPI
+* Built-in charts and tables
+* Suitable for analytics visualization
+
+It enabled fast creation of a retail intelligence dashboard without requiring frontend frameworks.
+
+---
+
+## 8. Production Improvements
 
 If deployed in production:
 
 * PostgreSQL would replace SQLite
 * Kafka would be used for event streaming
 * Multi-object tracking would be added
+* Cross-camera visitor tracking would be implemented
 * Real-time CCTV streams would replace static images
 * Advanced anomaly detection models would be introduced
+* Cloud deployment and monitoring would be added
 
 ---
 
-## 8. Conclusion
+## 9. Key Enhancements Implemented
 
-The chosen architecture prioritizes simplicity, scalability, and ease of demonstration while preserving a clear upgrade path toward a production-scale store intelligence platform.
+The final solution includes several enhancements beyond the basic architecture:
+
+* UUID-based event generation
+* Idempotent event ingestion
+* Staff-aware analytics
+* Conversion rate calculation
+* Funnel analytics
+* Heatmap analytics
+* Health monitoring endpoint
+* Anomaly detection:
+
+  * NO_ACTIVITY
+  * LOW_CONVERSION
+  * QUEUE_SPIKE
+  * DEAD_ZONE
+* Streamlit analytics dashboard
+* Automated test suite
+
+---
+
+## 10. Conclusion
+
+The chosen architecture prioritizes simplicity, scalability, maintainability, and ease of demonstration while preserving a clear upgrade path toward a production-scale AI-powered store intelligence platform.
+
+The design separates detection, event processing, storage, analytics, and visualization layers, making the system easy to extend and evolve as requirements grow.

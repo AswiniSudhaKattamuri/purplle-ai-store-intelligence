@@ -2,9 +2,9 @@
 
 ## 1. Overview
 
-This project implements an AI-powered Store Intelligence System that converts CCTV footage into business intelligence metrics.
+Purplle AI Store Intelligence is an AI-powered retail analytics platform that transforms CCTV footage into actionable business intelligence.
 
-The system detects people using YOLOv8, generates structured store events, stores them in SQLite, and exposes analytics through FastAPI endpoints.
+The system uses YOLOv8 for person detection, converts detections into structured store events, stores them in SQLite, and provides real-time analytics through FastAPI APIs and a Streamlit dashboard.
 
 ---
 
@@ -38,7 +38,13 @@ Analytics Layer
 
 ├── Heatmap API
 
-└── Anomaly API
+├── Anomaly API
+
+└── Health API
+
+↓
+
+Streamlit Dashboard
 
 ---
 
@@ -65,7 +71,14 @@ Example:
 }
 ```
 
-Detected people are converted into ENTRY events.
+Each detected person is converted into a simulated customer journey consisting of:
+
+* ENTRY
+* ZONE_VISIT
+* BILLING_QUEUE
+* PURCHASE
+* EXIT
+* REENTRY (optional)
 
 ---
 
@@ -88,12 +101,14 @@ Example:
 
 ```json
 {
-  "event_id": "1",
+  "event_id": "uuid",
   "store_id": "STORE_001",
   "visitor_id": "VISITOR_001",
   "event_type": "ENTRY"
 }
 ```
+
+UUIDs are used for event identifiers to ensure uniqueness.
 
 ---
 
@@ -108,11 +123,30 @@ Benefits:
 * No external infrastructure
 * Suitable for hackathon environments
 
-Events are stored in the events table.
+Idempotent ingestion is implemented using:
+
+* PRIMARY KEY(event_id)
+* INSERT OR IGNORE
+
+This prevents duplicate events from being stored.
 
 ---
 
-## 6. Analytics APIs
+## 6. Staff Handling
+
+The platform supports staff identification using the is_staff field.
+
+Staff events are stored but excluded from:
+
+* Visitor metrics
+* Conversion calculations
+* Funnel analytics
+
+This prevents employees from affecting customer analytics.
+
+---
+
+## 7. Analytics APIs
 
 ### POST /events/ingest
 
@@ -120,58 +154,104 @@ Stores incoming events.
 
 ### GET /stores/{store_id}/metrics
 
-Returns visitor metrics.
+Returns:
+
+* Unique visitors
+* Staff count
+* Purchase count
+* Conversion rate
 
 ### GET /stores/{store_id}/funnel
 
-Returns funnel statistics.
+Returns:
+
+* Entry count
+* Zone visits
+* Billing queue visits
+* Purchases
+* Funnel conversion rate
 
 ### GET /stores/{store_id}/heatmap
 
-Returns zone-level visit counts.
+Returns zone-level traffic distribution.
 
 ### GET /stores/{store_id}/anomalies
 
-Returns detected anomalies.
+Detects:
+
+* NO_ACTIVITY
+* LOW_CONVERSION
+* QUEUE_SPIKE
+* DEAD_ZONE
+
+### GET /health
+
+Returns:
+
+* System status
+* Database connectivity
+* Total stored events
 
 ---
 
-## 7. Event Flow
+## 8. Event Flow
 
 Person Detected
 
 ↓
 
-ENTRY Event Generated
+ENTRY Event
 
 ↓
 
-Ingestion API
+ZONE_VISIT
 
 ↓
 
-SQLite
+BILLING_QUEUE
+
+↓
+
+PURCHASE
+
+↓
+
+EXIT
+
+↓
+
+Optional REENTRY
+
+↓
+
+SQLite Storage
 
 ↓
 
 Analytics APIs
 
+↓
+
+Dashboard
+
 ---
 
-## 8. Assumptions
+## 9. Assumptions
 
 * YOLOv8 confidence threshold is configurable.
 * SQLite is sufficient for local deployment.
-* Event generation is simulated using detected persons.
-* Real CCTV streams can replace image inputs without major architectural changes.
+* Staff identification is simulated.
+* Customer journeys are simulated from detections.
+* Real CCTV streams can replace image inputs with minimal architectural changes.
 
 ---
 
-## 9. Future Improvements
+## 10. Future Improvements
 
 * Multi-object tracking
 * Real-time video stream processing
-* Stream processing with Kafka
+* Cross-camera visitor tracking
+* Kafka-based event streaming
 * PostgreSQL backend
-* Live dashboard
-* Advanced anomaly detection
+* Live CCTV ingestion
+* Advanced anomaly detection using machine learning

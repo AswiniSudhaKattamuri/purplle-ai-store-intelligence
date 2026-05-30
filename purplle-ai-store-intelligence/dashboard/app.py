@@ -32,23 +32,39 @@ if st.button("Load Analytics"):
         f"http://127.0.0.1:8000/stores/{store_id}/anomalies"
     ).json()
 
+    # Metrics
     st.subheader("Store Metrics")
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.metric(
-            "Unique Visitors",
+            "Visitors",
             metrics["unique_visitors"]
         )
 
     with col2:
         st.metric(
-            "Store ID",
-            metrics["store_id"]
+            "Staff",
+            metrics["staff_count"]
         )
 
-    st.subheader("Funnel Analytics")
+    with col3:
+        st.metric(
+            "Purchases",
+            metrics["purchase_count"]
+        )
+
+    with col4:
+        st.metric(
+            "Conversion %",
+            metrics["conversion_rate"]
+        )
+
+    # Funnel
+    st.subheader(
+        f"Funnel Analytics (Conversion: {funnel['conversion_rate']}%)"
+    )
 
     funnel_df = pd.DataFrame({
         "Stage": [
@@ -69,6 +85,7 @@ if st.button("Load Analytics"):
         funnel_df.set_index("Stage")
     )
 
+    # Heatmap
     st.subheader("Heatmap Analytics")
 
     if heatmap["zones"]:
@@ -77,16 +94,28 @@ if st.button("Load Analytics"):
             heatmap["zones"]
         )
 
+        st.bar_chart(
+            heatmap_df.set_index("zone_id")
+        )
+
         st.dataframe(
             heatmap_df,
             use_container_width=True
         )
 
+    # Anomalies
     st.subheader("Anomalies")
 
     if anomalies["anomalies"]:
-        st.warning(anomalies)
+
+        for anomaly in anomalies["anomalies"]:
+
+            st.warning(
+                f"{anomaly['type']} : {anomaly['message']}"
+            )
+
     else:
+
         st.success(
             "No anomalies detected"
         )

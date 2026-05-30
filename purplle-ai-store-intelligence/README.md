@@ -122,9 +122,13 @@ GET /stores/{store_id}/anomalies
 
 ## Screenshots
 
-### Dashboard
+### Dashboard - Overview
 
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard Overview](docs/screenshots/dashboard1.png)
+
+### Dashboard - Heatmap & Anomalies
+
+![Dashboard Details](docs/screenshots/dashboard2.png)
 
 ### API Documentation
 

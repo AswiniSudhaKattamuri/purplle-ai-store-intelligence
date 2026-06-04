@@ -1,16 +1,12 @@
 # Purplle AI Store Intelligence
 
-AI-powered Store Intelligence System built for the Purplle Tech Challenge 2026.
-
----
+AI-powered Store Intelligence System built for Purplle Tech Challenge 2026.
 
 ## Overview
 
 Purplle AI Store Intelligence converts CCTV footage into actionable retail analytics.
 
-The system uses YOLOv8 to detect people from CCTV images, generates structured store events, stores them in SQLite, and exposes business intelligence APIs through FastAPI. Analytics are visualized using a Streamlit dashboard.
-
-The platform helps retail teams understand customer movement, store engagement, conversion performance, and operational anomalies.
+The system uses YOLOv8 for person detection, generates structured retail events, stores them in SQLite, and exposes business intelligence insights through FastAPI APIs and a Streamlit dashboard.
 
 ---
 
@@ -20,57 +16,28 @@ The platform helps retail teams understand customer movement, store engagement, 
 
 * YOLOv8 Person Detection
 * Confidence Scoring
-* Visitor Identification
-* Simulated Customer Journey Generation
+* Event Generation Pipeline
 
 ### Event Processing
 
-* FastAPI Event Ingestion API
-* UUID-based Event IDs
-* Idempotent Event Storage
-* Duplicate Event Protection
-* SQLite Event Store
+* Structured Event Schema
+* FastAPI Event Ingestion
+* SQLite Event Storage
+* Idempotent Event Handling
 
-### Customer Journey Events
+### Analytics APIs
 
-* ENTRY
-* ZONE_VISIT
-* BILLING_QUEUE
-* PURCHASE
-* EXIT
-* REENTRY
-
-### Analytics
-
-* Unique Visitor Metrics
-* Staff-Aware Analytics
-* Purchase Tracking
-* Conversion Rate Analytics
+* Visitor Metrics
 * Funnel Analytics
 * Heatmap Analytics
-
-### Intelligence Features
-
-* Queue Spike Detection
-* Dead Zone Detection
-* Low Conversion Detection
-* No Activity Detection
-
-### Monitoring
-
-* Health Monitoring Endpoint
-* Database Connectivity Check
-* Event Count Monitoring
+* Anomaly Detection
 
 ### Dashboard
 
-* Visitor Metrics
-* Staff Count
-* Purchase Metrics
-* Conversion Rate
-* Funnel Visualization
-* Heatmap Visualization
-* Anomaly Alerts
+* Store Metrics
+* Conversion Funnel
+* Zone Heatmaps
+* Operational Anomalies
 
 ---
 
@@ -80,11 +47,11 @@ CCTV Image / Video
 
 ↓
 
-YOLOv8 Person Detection
+YOLOv8 Detection
 
 ↓
 
-Event Generation Layer
+Event Generation
 
 ↓
 
@@ -104,9 +71,7 @@ Analytics Layer
 
 ├── Heatmap API
 
-├── Anomaly API
-
-└── Health API
+└── Anomaly API
 
 ↓
 
@@ -117,63 +82,68 @@ Streamlit Dashboard
 ## Project Structure
 
 ```text
-purplle-ai-store-intelligence/
+app/
+├── anomalies.py
+├── database.py
+├── funnel.py
+├── health.py
+├── heatmap.py
+├── ingestion.py
+├── main.py
+├── metrics.py
+└── models.py
 
-├── app/
-│   ├── anomalies.py
-│   ├── database.py
-│   ├── funnel.py
-│   ├── health.py
-│   ├── heatmap.py
-│   ├── ingestion.py
-│   ├── main.py
-│   ├── metrics.py
-│   └── models.py
-│
-├── pipeline/
-│   ├── detect.py
-│   ├── emit.py
-│   ├── run.py
-│   └── tracker.py
-│
-├── data/
-│   ├── Images/
-│   ├── sample_events.json
-│   └── store.db
-│
-├── docs/
-│   ├── DESIGN.md
-│   ├── CHOICES.md
-│   └── screenshots/
-│
-├── tests/
-│   ├── test_anomalies.py
-│   ├── test_funnel.py
-│   ├── test_health.py
-│   ├── test_metrics.py
-│   └── test_pipeline.py
-│
-├── requirements.txt
-└── README.md
+pipeline/
+├── detect.py
+├── emit.py
+├── run.py
+└── tracker.py
+
+dashboard/
+└── app.py
+
+tests/
+
+docs/
+├── DESIGN.md
+└── CHOICES.md
+
+data/
 ```
 
----
+## Event Schema
+
+Each event contains:
+
+* event_id
+* store_id
+* camera_id
+* visitor_id
+* event_type
+* timestamp
+* zone_id
+* dwell_ms
+* is_staff
+* confidence
+
+Example:
+
+```json
+{
+  "event_id": "1",
+  "store_id": "STORE_001",
+  "visitor_id": "VISITOR_001",
+  "event_type": "ENTRY"
+}
+```
 
 ## API Endpoints
 
-### Health Monitoring
+### Health Check
 
 ```http
 GET /health
 ```
-
-Returns:
-
-* System Status
-* Database Connectivity
-* Total Events Stored
-
----
 
 ### Event Ingestion
 
@@ -181,24 +151,11 @@ Returns:
 POST /events/ingest
 ```
 
-Stores incoming retail events.
-
----
-
-### Store Metrics
+### Visitor Metrics
 
 ```http
 GET /stores/{store_id}/metrics
 ```
-
-Returns:
-
-* Unique Visitors
-* Staff Count
-* Purchase Count
-* Conversion Rate
-
----
 
 ### Funnel Analytics
 
@@ -206,28 +163,11 @@ Returns:
 GET /stores/{store_id}/funnel
 ```
 
-Returns:
-
-* Entry Count
-* Zone Visits
-* Billing Queue Visits
-* Purchases
-* Funnel Conversion Rate
-
----
-
 ### Heatmap Analytics
 
 ```http
 GET /stores/{store_id}/heatmap
 ```
-
-Returns:
-
-* Zone-wise Traffic Distribution
-* Visit Counts
-
----
 
 ### Anomaly Detection
 
@@ -235,28 +175,19 @@ Returns:
 GET /stores/{store_id}/anomalies
 ```
 
-Detects:
-
-* NO_ACTIVITY
-* LOW_CONVERSION
-* QUEUE_SPIKE
-* DEAD_ZONE
-
 ---
 
-## Screenshots
+## Dashboard Capabilities
 
-### Dashboard Overview
+The Streamlit dashboard provides:
 
-![Dashboard Overview](docs/screenshots/dashboard1.png)
-
-### Heatmap & Anomaly Analytics
-
-![Dashboard Details](docs/screenshots/dashboard2.png)
-
-### Swagger API Documentation
-
-![Swagger](docs/screenshots/swagger.png)
+* Visitor Count
+* Staff Count
+* Purchase Count
+* Conversion Rate
+* Funnel Visualization
+* Heatmap Visualization
+* Anomaly Alerts
 
 ---
 
@@ -265,31 +196,47 @@ Detects:
 * Python
 * FastAPI
 * SQLite
+* Streamlit
 * YOLOv8
 * OpenCV
 * Pydantic
-* Streamlit
 * Pytest
 
 ---
 
 ## Running the Project
 
-### 1. Install Dependencies
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-### 2. Start FastAPI
+### Start FastAPI Server
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-API Documentation:
+### Run Detection Pipeline
+
+```bash
+python pipeline/run.py
+```
+
+### Launch Dashboard
+
+```bash
+streamlit run dashboard/app.py
+```
+
+### Run Tests
+
+```bash
+pytest
+```
+
+### Swagger Documentation
 
 ```text
 http://127.0.0.1:8000/docs
@@ -297,97 +244,73 @@ http://127.0.0.1:8000/docs
 
 ---
 
-### 3. Run Detection Pipeline
+## Screenshots
 
-```bash
-python pipeline/run.py
-```
+### Dashboard Overview
 
-This will:
+* Visitor Metrics
+* Conversion Analytics
+* Funnel Visualization
 
-* Run YOLOv8 person detection
-* Generate customer journey events
-* Store events in SQLite
-* Populate analytics APIs
+### Dashboard Analytics
 
----
+* Heatmap Analytics
+* Anomaly Detection
 
-### 4. Launch Dashboard
+### Swagger Documentation
 
-```bash
-streamlit run dashboard/app.py
-```
+* API Testing Interface
+
+### YOLO Detection Validation
+
+* Person Detection Output
 
 ---
 
 ## Testing
 
-Run all tests:
+The project includes automated tests for:
 
-```bash
-pytest
-```
-
-Current Status:
-
-* Analytics Tests
-* Funnel Tests
-* Health Endpoint Tests
-* Anomaly Detection Tests
-* Pipeline Tests
-
-Example:
+* Health Endpoint
+* Metrics API
+* Funnel Analytics
+* Anomaly Detection
+* Detection Pipeline
 
 ```text
-==============================
-5 passed
-==============================
+5 Tests Passed
 ```
 
 ---
+## Validation Results
 
-### Validation
+The detection pipeline was validated using multiple retail-style images and videos with varying visitor densities.
 
-The YOLOv8 detection pipeline was validated on multiple retail-style scenes with varying customer densities.
+Sample validation outcomes:
 
-Example Results:
+* Video 1: 4 unique visitors detected with a 25% conversion rate.
+* Video 2: 7 unique visitors detected with a 28.57% conversion rate.
+* Additional test videos were processed to verify analytics consistency across different customer densities and store layouts.
 
-* Test Image 1 → 10 persons detected
-* Test Image 2 → 12 persons detected
+The system successfully generated structured retail events, populated the analytics database, and produced dashboard visualizations for metrics, funnel analytics, heatmaps, and anomaly detection.
 
-Detected visitors were automatically converted into customer journey events and ingested into the analytics pipeline.
+Known limitations include mirror reflections and severe occlusions, which may occasionally result in additional detections. These can be further improved through multi-object tracking and retail-specific model fine-tuning.
 
-
-
-## Engineering Highlights
-
-* YOLOv8-based visitor detection
-* Event-driven architecture
-* UUID event generation
-* Idempotent event ingestion
-* Staff-aware analytics
-* Retail funnel analytics
-* Heatmap analytics
-* Intelligent anomaly detection
-* Health monitoring
-* Interactive dashboard
-
----
 
 ## Future Improvements
 
-* Multi-object tracking
-* Real-time CCTV streaming
-* PostgreSQL backend
-* Kafka event streaming
-* Cross-camera visitor tracking
-* Machine Learning-based anomaly detection
-* Cloud deployment and monitoring
+* Multi-Object Tracking (DeepSORT / ByteTrack)
+* Real-Time CCTV Stream Processing
+* Kafka Event Streaming
+* PostgreSQL Backend
+* Advanced AI-Based Anomaly Detection
+* Authentication and Access Control
+* Cloud Deployment
 
 ---
 
 ## Author
 
-**Aswini Sudha Kattamuri**
+Aswini Sudha Kattamuri
 
 Purplle Tech Challenge 2026 Submission

@@ -153,6 +153,7 @@ This prevents employees from affecting customer analytics.
 Stores incoming events.
 
 ### GET /stores/{store_id}/metrics
+	
 
 Returns:
 
@@ -160,6 +161,13 @@ Returns:
 * Staff count
 * Purchase count
 * Conversion rate
+
+Conversion rate is calculated using:
+
+Unique Purchasing Visitors ÷ Unique Visitors × 100
+
+This approach avoids double-counting repeat purchase events and aligns with standard retail analytics practices.
+
 
 ### GET /stores/{store_id}/funnel
 

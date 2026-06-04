@@ -150,6 +150,25 @@ This provides more accurate business insights.
 
 ---
 
+### Why Unique Visitor-Based Conversion Rate?
+
+Retail conversion rate should measure how many unique visitors completed a purchase rather than counting total purchase events.
+
+The system calculates conversion rate using:
+
+* Unique purchasing visitors
+* Unique store visitors
+
+Benefits:
+
+* Prevents conversion rates from exceeding 100%
+* Avoids double-counting repeat purchase events
+* Produces more accurate business intelligence metrics
+* Aligns with standard retail analytics practices
+
+This approach ensures that conversion analytics reflect actual customer behavior rather than raw event counts.
+
+
 ### Why Streamlit?
 
 Streamlit was selected because:

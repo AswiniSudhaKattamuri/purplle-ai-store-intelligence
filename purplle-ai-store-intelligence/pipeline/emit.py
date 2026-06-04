@@ -31,7 +31,7 @@ def emit_event(
         json=payload
     )
 
-    print(response.json())
+    # print(response.json())
 
 
 def simulate_customer_journey(

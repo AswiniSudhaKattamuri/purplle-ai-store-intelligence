@@ -19,9 +19,6 @@ if st.button("Load Analytics"):
     metrics = requests.get(
         f"http://127.0.0.1:8000/stores/{store_id}/metrics"
     ).json()
-    video_metrics = requests.get(
-    "http://127.0.0.1:8000/video/metrics"
-).json()
 
     funnel = requests.get(
         f"http://127.0.0.1:8000/stores/{store_id}/funnel"
@@ -35,10 +32,10 @@ if st.button("Load Analytics"):
         f"http://127.0.0.1:8000/stores/{store_id}/anomalies"
     ).json()
 
-    # Metrics
+    # Store Metrics
     st.subheader("Store Metrics")
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.metric(
@@ -64,21 +61,9 @@ if st.button("Load Analytics"):
             metrics["conversion_rate"]
         )
 
-    # Funnel
-    st.subheader("Video Analytics")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    st.metric(
-        "Unique Video Visitors",
-        video_metrics["unique_visitors"]
-    )
-
-with col2:
-    st.metric(
-        "Max Concurrent Visitors",
-        video_metrics["max_concurrent_visitors"]
+    # Funnel Analytics
+    st.subheader(
+        f"Funnel Analytics (Conversion: {funnel['conversion_rate']}%)"
     )
 
     funnel_df = pd.DataFrame({
@@ -100,7 +85,7 @@ with col2:
         funnel_df.set_index("Stage")
     )
 
-    # Heatmap
+    # Heatmap Analytics
     st.subheader("Heatmap Analytics")
 
     if heatmap["zones"]:

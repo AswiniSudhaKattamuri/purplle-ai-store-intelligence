@@ -19,6 +19,9 @@ if st.button("Load Analytics"):
     metrics = requests.get(
         f"http://127.0.0.1:8000/stores/{store_id}/metrics"
     ).json()
+    video_metrics = requests.get(
+    "http://127.0.0.1:8000/video/metrics"
+).json()
 
     funnel = requests.get(
         f"http://127.0.0.1:8000/stores/{store_id}/funnel"
@@ -35,7 +38,7 @@ if st.button("Load Analytics"):
     # Metrics
     st.subheader("Store Metrics")
 
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.metric(
@@ -62,8 +65,20 @@ if st.button("Load Analytics"):
         )
 
     # Funnel
-    st.subheader(
-        f"Funnel Analytics (Conversion: {funnel['conversion_rate']}%)"
+    st.subheader("Video Analytics")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.metric(
+        "Unique Video Visitors",
+        video_metrics["unique_visitors"]
+    )
+
+with col2:
+    st.metric(
+        "Max Concurrent Visitors",
+        video_metrics["max_concurrent_visitors"]
     )
 
     funnel_df = pd.DataFrame({

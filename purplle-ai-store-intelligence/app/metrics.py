@@ -18,11 +18,11 @@ def get_metrics(store_id: str):
 
     # Count only customer purchases
     cursor.execute("""
-    SELECT COUNT(*)
-    FROM events
-    WHERE store_id = ?
-    AND event_type = 'PURCHASE'
-    AND is_staff = 0
+    SELECT COUNT(DISTINCT visitor_id)
+	FROM events
+	WHERE store_id = ?
+	AND event_type = 'PURCHASE'
+	AND is_staff = 0
     """, (store_id,))
 
     purchases = cursor.fetchone()[0]

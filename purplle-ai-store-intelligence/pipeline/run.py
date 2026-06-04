@@ -3,7 +3,7 @@ from emit import simulate_customer_journey
 import random
 
 detections = detect_people(
-    "data/Images/test2.jpg"
+    "data/Videos//CAM 1.mp4"
 )
 
 person_count = len(detections)
